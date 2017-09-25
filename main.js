@@ -1,247 +1,168 @@
 'use strict';
-
-class App {
-
-    constructor() {
-        this.estudiantes = [];
-    }
-
-    agregarEstudiante(nombre, puntosTecnicos, puntosHSE) {
-        let estudiante = {
-            nombre: nombre,
-            puntosTecnicos: puntosTecnicos,
-            puntosHSE: puntosHSE
-        }
-        this.estudiantes.push(estudiante);
-        return estudiante;
-    }
-
-    mostrar(estudiante) {
-        let fichaEstudiante = `
-            <div class = "estudiante">
-                <h3 class="text-uppercase">${estudiante.nombre}</h3>
-                <strong>Tech Skills:</strong> ${estudiante.puntosTecnicos}%<br>
-                <strong>Life Skills:</strong> ${estudiante.puntosHSE}%<br>
-                <strong>Status:</strong> Active<br>
-            </div>
-        `
-        return fichaEstudiante;
-    }
-    mostrarLista(estudiantes) {
-        return estudiantes.map(this.mostrar);
-    }
-
-    estudiantesPromedioalto() {
-        return this.estudiantes.filter(a => ((a.puntosTecnicos + a.puntosHSE) / 2) >= 70);
-    }
-
-    reiniciar() {
-        $('#puntosTecnicos').val('');
-        $('#puntosHSE').val('');
-        $("#nombre").val('');
-        $("#nombre").next().css('visibility', 'hidden');
-        $('#range').html(50);
-        $('#range2').html(50);
-        $('#agregar').removeAttr('data-dismiss');
-    }
-
-    eventoMostrar() {
-        $("#fichas").html(this.mostrarLista(this.estudiantes));
-    }
-    eventoMostrarEmpleables() {
-        let empleables = this.estudiantesPromedioalto();
-        $('#fichas').html(this.mostrarLista(empleables));
-    }
-
-    eventoEliminar() {
-        this.estudiantes = this.estudiantesPromedioalto();
-        $('#fichas').html(this.mostrarLista(this.estudiantes));
-    }
-
-    eventoAgregar() {
-        let nombre = $('#nombre').val();
-        let puntosTecnicos = parseInt($("#puntosTecnicos").val());
-        let puntosHSE = parseInt($("#puntosHSE").val());
-        if (nombre == '') {
-            $("#nombre").next().css('visibility', 'visible');
-        } else {
-            $('#agregar').attr('data-dismiss', "modal");
-            let estudiante = this.agregarEstudiante(nombre, puntosTecnicos, puntosHSE);
-            $("#fichas").html(this.mostrar(estudiante));
-        }
-    }
-
-
-    iniciar() {
-        $("#agregar").click(() => this.eventoAgregar());
-
-        $('#agregando').click(() => this.reiniciar());
-        $('#mostrar').click(() => this.eventoMostrar());
-        $('#empleables').click(() => this.eventoMostrarEmpleables());
-        $('#eliminadas').click(() => this.eventoEliminar());
-    }
-}
-$(document).ready(() => {
-
-    var app = new App();
-    app.iniciar();
-})
-
 /// asientos
-function buscar (asientos, dni) {
-    for (var i = 0; i < asientos.length; i++) {
-       if (asientos[i] != undefined ) 
-          if (asientos[i].dni == dni)
-             return asientos[i];
+class Bus {
+    constructor() {
+        this.pasajeros = [];
     }
-    return '';
- }
- function mostrar(asientos){
-    var s1 = "", s2 = "";
-    for (var i = 0; i < asientos.length; i++) {
-       var e =  (asientos[i] != undefined)  ?  '*' : '';
-       if ( i % 2 == 0)
-          s1 += (i+1) + "[" + e + "] ";
-       else
-          s2 += (i+1) + "[" + e + "] ";
-    }
-    return "\n" + s1 + "\n" + s2 + "\n";
- }  
- 
- function reserva () {
-    var N = 10; // Número de asientos
-    var asientos = [];
-    for (var i = 0; i < N; i++) {
-       asientos[i] = undefined;
-    }
-    var mensaje = "0: Salir\n" +
-                  "1: Reservar  asiento\n" +
-                  "2: Liberar asiento \n" + 
-                  "3: Seleccionar asiento \n" +
-                  "4: Buscar por DNI \n";
-    
-    var option = 0;
-    while (true){
-       var str = mostrar(asientos) + mensaje + " >> ingrese opcion:" ;
-       option = parseInt( prompt( str )  );
-       if (option == 0) {
-          break;
-       }else if (option == 1) {
-          str = "seleccione asiento: " + mostrar(asientos);
-          var nro = parseInt( prompt( str )  );
-          if (nro > 0 && nro <= N) {
-             var name =  prompt( "nombre del pasajero" )  ;
-             var id = parseInt( prompt( "dni del pasajero"  ) );
-             asientos[nro - 1] = {
-                nombre : name,
-                dni: id
-             };
-          }
-       }else if (option == 2) {
-          str = "seleccione asiento: " + mostrar(asientos);
-          var nro = parseInt( prompt( str )  );
-          if (nro >0 && nro <= N) {
-             asientos[nro - 1] = undefined;
-          }
-        }else if (option == 3) {
-          str = "seleccione asiento: " + mostrar(asientos);
-          var nro = parseInt( prompt( str )  );
-          if (nro > 0 && nro <= N) {
-             str = mostrar(asientos) +
-                      "Nombre del pasajero: " + asientos [nro - 1].nombre + 
-                      "DNI del pasajero: " + asientos [nro - 1].dni;
-                 
-             alert (str);
-          }
-       }
-       else if (option == 4) {
-          str = "ingrese dni: ";
-          var dni = parseInt( prompt( str )  );
-          
-          alert ( "usuario:" +  buscar (asientos, dni).nombre );
-        }
-       
-    } 
-    imprimir(asientos);
- }
- 
- reserva();
+    agregarPasajero(nombre, dni, numeroAsiento)
+}
 
- function buscar (asientos, dni) {
+function buscar(asientos, dni) {
     for (var i = 0; i < asientos.length; i++) {
-       if (asientos[i] != undefined ) 
-          if (asientos[i].dni == dni)
-             return asientos[i];
+        if (asientos[i] != undefined)
+            if (asientos[i].dni == dni)
+                return asientos[i];
     }
     return '';
- }
- function mostrar(asientos){
-    var s1 = "", s2 = "";
+}
+
+function mostrar(asientos) {
+    var s1 = "",
+        s2 = "";
     for (var i = 0; i < asientos.length; i++) {
-       var e =  (asientos[i] != undefined)  ?  '*' : '';
-       if ( i % 2 == 0)
-          s1 += (i+1) + "[" + e + "] ";
-       else
-          s2 += (i+1) + "[" + e + "] ";
+        var e = (asientos[i] != undefined) ? '*' : '';
+        if (i % 2 == 0)
+            s1 += (i + 1) + "[" + e + "] ";
+        else
+            s2 += (i + 1) + "[" + e + "] ";
     }
     return "\n" + s1 + "\n" + s2 + "\n";
- }  
- 
- function reserva () {
+}
+
+function reserva() {
     var N = 10; // Número de asientos
     var asientos = [];
     for (var i = 0; i < N; i++) {
-       asientos[i] = undefined;
+        asientos[i] = undefined;
     }
     var mensaje = "0: Salir\n" +
-                  "1: Reservar  asiento\n" +
-                  "2: Liberar asiento \n" + 
-                  "3: Seleccionar asiento \n" +
-                  "4: Buscar por DNI \n";
-    
+        "1: Reservar  asiento\n" +
+        "2: Liberar asiento \n" +
+        "3: Seleccionar asiento \n" +
+        "4: Buscar por DNI \n";
+
     var option = 0;
-    while (true){
-       var str = mostrar(asientos) + mensaje + " >> ingrese opcion:" ;
-       option = parseInt( prompt( str )  );
-       if (option == 0) {
-          break;
-       }else if (option == 1) {
-          str = "seleccione asiento: " + mostrar(asientos);
-          var nro = parseInt( prompt( str )  );
-          if (nro > 0 && nro <= N) {
-             var name =  prompt( "nombre del pasajero" )  ;
-             var id = parseInt( prompt( "dni del pasajero"  ) );
-             asientos[nro - 1] = {
-                nombre : name,
-                dni: id
-             };
-          }
-       }else if (option == 2) {
-          str = "seleccione asiento: " + mostrar(asientos);
-          var nro = parseInt( prompt( str )  );
-          if (nro >0 && nro <= N) {
-             asientos[nro - 1] = undefined;
-          }
-        }else if (option == 3) {
-          str = "seleccione asiento: " + mostrar(asientos);
-          var nro = parseInt( prompt( str )  );
-          if (nro > 0 && nro <= N) {
-             str = mostrar(asientos) +
-                      "Nombre del pasajero: " + asientos [nro - 1].nombre + 
-                      "DNI del pasajero: " + asientos [nro - 1].dni;
-                 
-             alert (str);
-          }
-       }
-       else if (option == 4) {
-          str = "ingrese dni: ";
-          var dni = parseInt( prompt( str )  );
-          
-          alert ( "usuario:" +  buscar (asientos, dni).nombre );
+    while (true) {
+        var str = mostrar(asientos) + mensaje + " >> ingrese opcion:";
+        option = parseInt(prompt(str));
+        if (option == 0) {
+            break;
+        } else if (option == 1) {
+            str = "seleccione asiento: " + mostrar(asientos);
+            var nro = parseInt(prompt(str));
+            if (nro > 0 && nro <= N) {
+                var name = prompt("nombre del pasajero");
+                var id = parseInt(prompt("dni del pasajero"));
+                asientos[nro - 1] = {
+                    nombre: name,
+                    dni: id
+                };
+            }
+        } else if (option == 2) {
+            str = "seleccione asiento: " + mostrar(asientos);
+            var nro = parseInt(prompt(str));
+            if (nro > 0 && nro <= N) {
+                asientos[nro - 1] = undefined;
+            }
+        } else if (option == 3) {
+            str = "seleccione asiento: " + mostrar(asientos);
+            var nro = parseInt(prompt(str));
+            if (nro > 0 && nro <= N) {
+                str = mostrar(asientos) +
+                    "Nombre del pasajero: " + asientos[nro - 1].nombre +
+                    "DNI del pasajero: " + asientos[nro - 1].dni;
+
+                alert(str);
+            }
+        } else if (option == 4) {
+            str = "ingrese dni: ";
+            var dni = parseInt(prompt(str));
+
+            alert("usuario:" + buscar(asientos, dni).nombre);
         }
-       
-    } 
+
+    }
     imprimir(asientos);
- }
- 
- reserva();
+}
+
+reserva();
+
+function buscar(asientos, dni) {
+    for (var i = 0; i < asientos.length; i++) {
+        if (asientos[i] != undefined)
+            if (asientos[i].dni == dni)
+                return asientos[i];
+    }
+    return '';
+}
+
+function mostrar(asientos) {
+    var s1 = "",
+        s2 = "";
+    for (var i = 0; i < asientos.length; i++) {
+        var e = (asientos[i] != undefined) ? '*' : '';
+        if (i % 2 == 0)
+            s1 += (i + 1) + "[" + e + "] ";
+        else
+            s2 += (i + 1) + "[" + e + "] ";
+    }
+    return "\n" + s1 + "\n" + s2 + "\n";
+}
+
+function reserva() {
+    var N = 10; // Número de asientos
+    var asientos = [];
+    for (var i = 0; i < N; i++) {
+        asientos[i] = undefined;
+    }
+    var mensaje = "0: Salir\n" +
+        "1: Reservar  asiento\n" +
+        "2: Liberar asiento \n" +
+        "3: Seleccionar asiento \n" +
+        "4: Buscar por DNI \n";
+
+    var option = 0;
+    while (true) {
+        var str = mostrar(asientos) + mensaje + " >> ingrese opcion:";
+        option = parseInt(prompt(str));
+        if (option == 0) {
+            break;
+        } else if (option == 1) {
+            str = "seleccione asiento: " + mostrar(asientos);
+            var nro = parseInt(prompt(str));
+            if (nro > 0 && nro <= N) {
+                var name = prompt("nombre del pasajero");
+                var id = parseInt(prompt("dni del pasajero"));
+                asientos[nro - 1] = {
+                    nombre: name,
+                    dni: id
+                };
+            }
+        } else if (option == 2) {
+            str = "seleccione asiento: " + mostrar(asientos);
+            var nro = parseInt(prompt(str));
+            if (nro > 0 && nro <= N) {
+                asientos[nro - 1] = undefined;
+            }
+        } else if (option == 3) {
+            str = "seleccione asiento: " + mostrar(asientos);
+            var nro = parseInt(prompt(str));
+            if (nro > 0 && nro <= N) {
+                str = mostrar(asientos) +
+                    "Nombre del pasajero: " + asientos[nro - 1].nombre +
+                    "DNI del pasajero: " + asientos[nro - 1].dni;
+
+                alert(str);
+            }
+        } else if (option == 4) {
+            str = "ingrese dni: ";
+            var dni = parseInt(prompt(str));
+
+            alert("usuario:" + buscar(asientos, dni).nombre);
+        }
+
+    }
+    imprimir(asientos);
+}
+
+reserva();
