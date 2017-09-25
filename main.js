@@ -4,7 +4,30 @@ class Bus {
     constructor() {
         this.pasajeros = [];
     }
-    agregarPasajero(nombre, dni, numeroAsiento)
+    agregarPasajero(nombre, dni, numeroAsiento) {
+        let pasajero = {
+            nombre: nombre,
+            dni: dni,
+            numeroAsiento: numeroAsiento,
+        }
+        this.pasajeros.push(pasajero);
+        return pasajero;
+
+    }
+    mostrar(pasajero) {
+        let fichaPasajero =
+            `
+            <div class = "pasajero">
+                <h3 class="text-uppercase">${pasajero.nombre}</h3>
+                <strong>Tech Skills:</strong> ${pasajero.dni}%<br>
+                <strong>Life Skills:</strong> ${pasajero.numeroAsiento}%<br>
+                <strong>Status:</strong> Active<br>
+            </div>
+        `
+        return fichaPasajero;
+    }
+
+}
 }
 
 function buscar(asientos, dni) {
