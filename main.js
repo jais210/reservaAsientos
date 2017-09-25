@@ -26,9 +26,13 @@ class Bus {
         `
         return fichaPasajero;
     }
+    mostrarListaPasajero(pasajeros) {
+        return pasajeros.map(this.mostrar);
+    }
+}
+}
 
-}
-}
+// funciones 
 
 function buscar(asientos, dni) {
     for (var i = 0; i < asientos.length; i++) {
