@@ -1,91 +1,139 @@
-'use strict';
+'use strict'
+const busMapa = function() {
+        let cantidadAsiento = 40;
+        let columnas = 4;
+        let filas = cantidadAsiento / columnas;
+        let asientosHTML = "",
+            numeroDeAsiento = 1;
+        for (let i = 1; i <= filas; i++) {
+            asientosHTML += `<div class='row' id='fila${i}'>`;
 
-class App {
+            for (let j = 0; j < columnas; j++) {
+                asientosHTML += `<div class='col col-xl-2' id='${numeroDeAsiento}'>${numeroDeAsiento}</div>`;
+                numeroDeAsiento += 1;
+                (j == 1) ? asientosHTML += "<div class='col col-xl-1'></div>": asientosHTML += "";
 
-    constructor() {
-        this.estudiantes = [];
-    }
+            }
+            asientosHTML += "</div>";
 
-    agregarEstudiante(nombre, puntosTecnicos, puntosHSE) {
-        let estudiante = {
-            nombre: nombre,
-            puntosTecnicos: puntosTecnicos,
-            puntosHSE: puntosHSE
         }
-        this.estudiantes.push(estudiante);
-        return estudiante;
+        return asientosHTML;
     }
+    /** ------- -----  */
 
-    mostrar(estudiante) {
-        let fichaEstudiante = `
-            <div class = "estudiante">
-                <h3 class="text-uppercase">${estudiante.nombre}</h3>
-                <strong>Tech Skills:</strong> ${estudiante.puntosTecnicos}%<br>
-                <strong>Life Skills:</strong> ${estudiante.puntosHSE}%<br>
-                <strong>Status:</strong> Active<br>
-            </div>
-        `
-        return fichaEstudiante;
-    }
-    mostrarLista(estudiantes) {
-        return estudiantes.map(this.mostrar);
-    }
+const reserva = {
+    pasajeros: [{
+            nroAsiento: "39",
+            nombre: "Maritza Fernandes",
+            dni: "89898998",
+            estado: true
+        },
+        {
+            nroAsiento: "3",
+            nombre: "Carolina Baez",
+            dni: "89236723",
+            estado: true
+        },
+        {
+            nroAsiento: "15",
+            nombre: "Elizabeth Mamani",
+            dni: "78723211",
+            estado: true
+        }
+    ],
+    dniBuscado: undefined,
+    inicio: () => {
+        $('#bus').html(busMapa);
+        reserva.colorearAsientos();
+        $('.col-xl-2').click(reserva.reservarAsiento);
+        $('#guardarDatos').click(reserva.guardarDatos);
+        $('#mostrarLista').click(reserva.mostrarLista);
+        $('#btnBuscar').click(reserva.buscarDNI);
+        $('#eliminarReserva').click(reserva.eliminarReserva);
+    },
+    reservarAsiento: (event) => {
+        let nro = event.target.textContent;
+        let clase = event.target.classList[2];
+        $('#nro_Asiento').val(nro);
+        if (clase != undefined) {
+            let asiento = reserva.pasajeros.filter((elemento, i) => {
+                return elemento.nroAsiento == nro;
+            });
+            $('#nombreApellido').val(asiento[0].nombre);
+            $('#dni').val(asiento[0].dni);
+        }
+    },
+    guardarDatos: () => {
+        let clase = $('#' + $('#nro_Asiento').val())[0].classList[2];
+        console.log(clase)
+        if ($('#nro_Asiento').val() != "" && $('#nombreApellido').val() != "" && $('#dni').val() != "" && clase != 'reservado') {
+            let datos = {
+                nroAsiento: $('#nro_Asiento').val(),
+                nombre: $('#nombreApellido').val(),
+                dni: $('#dni').val(),
+                estado: true
+            };
+            $('#alerta').html(`<div class="alert alert-success" role="alert">Guardado con Exito!!</div>`)
+            reserva.pasajeros.push(datos);
+            reserva.colorearAsientos();
+            reserva.limpiarInputs();
+        }
+        if (clase == 'reservado') {
+            $('#alerta').html(`<div class="alert alert-danger" role="alert">Eliminar Reserva para Agregar</div>`)
+        }
 
-    estudiantesPromedioalto() {
-        return this.estudiantes.filter(a => ((a.puntosTecnicos + a.puntosHSE) / 2) >= 70);
-    }
-
-    reiniciar() {
-        $('#puntosTecnicos').val('');
-        $('#puntosHSE').val('');
-        $("#nombre").val('');
-        $("#nombre").next().css('visibility', 'hidden');
-        $('#range').html(50);
-        $('#range2').html(50);
-        $('#agregar').removeAttr('data-dismiss');
-    }
-
-    eventoMostrar() {
-        $("#fichas").html(this.mostrarLista(this.estudiantes));
-    }
-    eventoMostrarEmpleables() {
-        let empleables = this.estudiantesPromedioalto();
-        $('#fichas').html(this.mostrarLista(empleables));
-    }
-
-    eventoEliminar() {
-        this.estudiantes = this.estudiantesPromedioalto();
-        $('#fichas').html(this.mostrarLista(this.estudiantes));
-    }
-
-    eventoAgregar() {
-        let nombre = $('#nombre').val();
-        let puntosTecnicos = parseInt($("#puntosTecnicos").val());
-        let puntosHSE = parseInt($("#puntosHSE").val());
-        if (nombre == '') {
-            $("#nombre").next().css('visibility', 'visible');
+    },
+    mostrarLista: () => {
+        let lista = "";
+        reserva.pasajeros.map((elemento) => {
+            lista += `<div class='row'>\
+            <div class='col col-xl-2 col-sm-2'>${elemento.nroAsiento}</div>\
+            <div class='col col-xl-5 col-sm-5'>${elemento.nombre}</div>\
+            <div class='col col-xl-2 col-sm-2'>${elemento.dni}</div>\
+            </div>`;
+        });
+        $('#listaPasajeros').html(lista)
+    },
+    buscarDNI: () => {
+        let dni = $('#buscarDni').val();
+        reserva.dniBuscado = reserva.pasajeros.filter((elemento, i) => {
+            return elemento.dni == dni;
+        });
+        if (reserva.dniBuscado.length != 0) {
+            $('#listaPasajeros').html(`<div class='row'>\
+            <div class='col col-xl-2 col-sm-2 '>${reserva.dniBuscado[0].nroAsiento}</div>\
+            <div class='col col-xl-5 col-sm-5'>${reserva.dniBuscado[0].nombre}</div>\
+            <div class='col col-xl-2 col-sm-3'>${reserva.dniBuscado[0].dni}</div>\
+            </div>`);
         } else {
-            $('#agregar').attr('data-dismiss', "modal");
-            let estudiante = this.agregarEstudiante(nombre, puntosTecnicos, puntosHSE);
-            $("#fichas").html(this.mostrar(estudiante));
+            $('#listaPasajeros').html(`No hay Resultados`);
         }
-    }
+    },
+    eliminarReserva: () => {
+        let nro = $('#nro_Asiento').val();
+        let indice;
+        reserva.pasajeros.map((elemento, i) => {
+            return (nro == elemento.nroAsiento) ? indice = i : '';
+        });
+        //console.log(indice);
+        $('#' + reserva.pasajeros[indice].nroAsiento).removeClass('reservado')
+        reserva.pasajeros.splice(indice, 1);
+        reserva.colorearAsientos();
+        reserva.limpiarInputs();
 
-
-    iniciar() {
-        $("#agregar").click(() => this.eventoAgregar());
-
-        $('#agregando').click(() => this.reiniciar());
-        $('#mostrar').click(() => this.eventoMostrar());
-        $('#empleables').click(() => this.eventoMostrarEmpleables());
-        $('#eliminadas').click(() => this.eventoEliminar());
+    },
+    limpiarInputs: () => {
+        $('#nro_Asiento').val('')
+        $('#nombreApellido').val('');
+        $('#dni').val('');
+    },
+    colorearAsientos: () => {
+        reserva.pasajeros.map((elemento, i) => {
+            return $('#' + elemento.nroAsiento).addClass('reservado');
+        });
     }
 }
-$(document).ready(() => {
-
-    var app = new App();
-    app.iniciar();
-})
+$(document).ready(reserva.inicio);
 
 /// asientos
 function buscar (asientos, dni) {
