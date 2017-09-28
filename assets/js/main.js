@@ -1,47 +1,14 @@
 'use strict'
-const distribucionAsientos = function() {
-        let cantidadAsiento = 20;
-        let columnas = 4;
-        let filas = cantidadAsiento / columnas;
-        let asientosHTML = "",
-            numeroDeAsiento = 1;
-        for (let i = 1; i <= filas; i++) {
-            asientosHTML += `<div class='row' id='fila${i}'>`;
-
-            for (let j = 0; j < columnas; j++) {
-                asientosHTML += `<div class='col col-xl-2 text-center' id='${numeroDeAsiento}'>${numeroDeAsiento}</div>`;
-                numeroDeAsiento += 1;
-                (j == 1) ? asientosHTML += "<div class='col col-xl-1 text-center'></div>": asientosHTML += "";
-
-            }
-            asientosHTML += "</div>";
-
-        }
-        return asientosHTML;
-    }
-    /**/
-
 const reserva = {
     pasajeros: [{
-            nroAsiento: "39",
+            nroAsiento: "2",
             nombre: "Mauricio Gamarra",
             dni: "89898998",
             estado: true
         },
-        {
-            nroAsiento: "3",
-            nombre: "Carmen Gonzales",
-            dni: "89236723",
-            estado: true
-        },
-        {
-            nroAsiento: "15",
-            nombre: "Elizabeth Monroy",
-            dni: "78723211",
-            estado: true
-        }
+        
     ],
-    dniBuscado: undefined,
+    bucarDni: undefined,
     inicio: () => {
         $('#bus').html(distribucionAsientos);
         reserva.colorearAsientos();
@@ -73,7 +40,7 @@ const reserva = {
                 dni: $('#dni').val(),
                 estado: true
             };
-            $('#alerta').html(`<div class="alert alert-success" role="alert">Guardado con Exito!!</div>`)
+            $('#alerta').html(`<div class="alert alert-success" role="alert">Registrado</div>`)
             reserva.pasajeros.push(datos);
             reserva.colorearAsientos();
             reserva.limpiarInputs();
@@ -87,23 +54,23 @@ const reserva = {
         let lista = "";
         reserva.pasajeros.map((elemento) => {
             lista += `<div class='row'>\
-            <div class='col col-xl-2 col-sm-2 text-center'>${elemento.nroAsiento}</div>\
-            <div class='col col-xl-5 col-sm-5 text-center'>${elemento.nombre}</div>\
-            <div class='col col-xl-2 col-sm-2 text-center'>${elemento.dni}</div>\
+            <div id="tablaPasajero" class='col col-xl-2 col-sm-2 text-center'>${elemento.nroAsiento}</div>\
+            <div id="tablaPasajero" class='col col-xl-5 col-sm-5 text-center'>${elemento.nombre}</div>\
+            <div id="tablaPasajero" class='col col-xl-2 col-sm-2 text-center'>${elemento.dni}</div>\
             </div>`;
         });
         $('#listaPasajeros').html(lista)
     },
     buscarDNI: () => {
         let dni = $('#buscarDni').val();
-        reserva.dniBuscado = reserva.pasajeros.filter((elemento, i) => {
+        reserva.bucarDni = reserva.pasajeros.filter((elemento, i) => {
             return elemento.dni == dni;
         });
-        if (reserva.dniBuscado.length != 0) {
+        if (reserva.bucarDni.length != 0) {
             $('#listaPasajeros').html(`<div class='row'>\
-            <div class='col col-xl-2 col-sm-2 '>${reserva.dniBuscado[0].nroAsiento}</div>\
-            <div class='col col-xl-5 col-sm-5'>${reserva.dniBuscado[0].nombre}</div>\
-            <div class='col col-xl-2 col-sm-3'>${reserva.dniBuscado[0].dni}</div>\
+            <div class='col col-xl-2 col-sm-2 '>${reserva.bucarDni[0].nroAsiento}</div>\
+            <div class='col col-xl-5 col-sm-5'>${reserva.bucarDni[0].nombre}</div>\
+            <div class='col col-xl-2 col-sm-3'>${reserva.bucarDni[0].dni}</div>\
             </div>`);
         } else {
             $('#listaPasajeros').html(`No hay Resultados`);
@@ -132,5 +99,25 @@ const reserva = {
             return $('#' + elemento.nroAsiento).addClass('reservado');
         });
     }
+}
+const distribucionAsientos = function() {
+    let totalAsientos = 20;
+    let columnas = 4;
+    let filas = totalAsientos / columnas;
+    let html = "",
+        numeroAsiento = 1;
+    for (let i = 1; i <= filas; i++) {
+        html += `<div class='row' id='fila${i}'>`;
+
+        for (let j = 0; j < columnas; j++) {
+            html += `<div class='col col-xl-2 text-center' id='${numeroAsiento}'>${numeroAsiento}</div>`;
+            numeroAsiento += 1;
+            (j == 1) ? html += "<div class='col col-xl-1 text-center'></div>": html += "";
+
+        }
+        html += "</div>";
+
+    }
+    return html;
 }
 $(document).ready(reserva.inicio);

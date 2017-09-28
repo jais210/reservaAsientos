@@ -1,0 +1,70 @@
+
+@import url('https://fonts.googleapis.com/css?family=Poiret+One|Roboto+Slab');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poiret One', cursive;
+    font-family: 'Roboto Slab', serif;
+    
+}
+header{
+    background: #B81790;
+    margin-bottom: 10px 0;
+    color: white;
+}
+header h1{
+    font-size: 3vw;
+    padding: 30px 0;
+}
+body{
+    background-color: pink;
+}
+table td{
+    height: 20px;
+    width: 20px;
+    border: 1px solid black;
+}
+.reservado {
+    background: #DACD16;
+}
+#bus .col-xl-2 {
+    border: 1px solid #9817B8;
+    border-radius: 2px;
+}
+.inputDNI {
+    padding: 15px 0;
+}
+.datosPersonles h1{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: 3vw;
+}
+form .btn {
+    margin: 3px 0;
+}
+.tablaPasajeros div{
+    background:#DACD16;
+    padding: 10px 3px;
+    color: black;
+    border: 1px solid #FFFFFF;
+    position: relative;
+    left:150px;
+}
+#tablaPasajero{
+    background:#DACD16;
+    padding: 10px 3px;
+    color: black;
+    border: 1px solid #FFFFFF;
+    position: relative;
+    left:150px;
+}
+#listaPasajeros .row div{
+    border: 1px solid #DACD16;
+}
+#mostrarLista{
+    position: relative;
+    left: 480px;
+    
+}
